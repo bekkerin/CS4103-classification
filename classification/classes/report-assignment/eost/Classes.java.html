@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Classes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">eost</a> &gt; <span class="el_source">Classes.java</span></div><h1>Classes.java</h1><pre class="source lang-java linenums">package eost;
+
+import static eost.Classes.Classification.*;
+
+import javax.lang.model.util.ElementScanner6;
+
+<span class="nc" id="L7">public class Classes {</span>
+
+<span class="fc" id="L9">	public static enum Classification { FRESHMAN, SOPHOMORE,JUNIOR,SENIOR,GRADUATE , ERROR};</span>
+
+	/**
+	 * Determine the classification based on credithours and graduation status
+	 * Undergraduate credit hours are for NSU only. If a student has graduated from the undergraduate degree and has more than 128 hours, the student is a graduate student.
+	 * FRESHMAN: has completed 0-29 semester credit hours.
+     * SOPHOMORE: has completed 30-59 semester credit hours.
+     * JUNIOR: has completed 60-89 semester credit hours.
+     * SENIOR: has completed 90 or more semester credit hours but has not graduated.
+     * GRADUATE: has graduated from a bachelor's degree.
+	 *
+	 * @param credits How many credit hours the student has passed
+	 * @param graduated Whether the student has graduated with a bachelor's degree
+	 *
+	 * @return
+	 * FRESHMAN
+     * SOPHOMORE
+     * JUNIOR
+     * SENIOR
+     * GRADUATE
+	 * ERROR - credits less than 0 or less than 124 credits but is listed as graduated
+	 */
+
+	public static Classification classify(long credits, boolean graduated)
+	{
+<span class="fc" id="L34">		Classification rv = FRESHMAN;</span>
+
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		if (credits == 128)</span>
+<span class="nc" id="L37">			rv = SENIOR; // weird value</span>
+
+<span class="fc bfc" id="L39" title="All 4 branches covered.">		if (credits &gt;= 90 &amp;&amp; credits &lt;150) // can't keep studying forever</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">			if (!graduated)</span>
+<span class="fc" id="L41">				rv = SENIOR;</span>
+			else 
+<span class="fc" id="L43">				rv = GRADUATE;</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">		else if (credits &gt;= 60 &amp;&amp; !graduated)</span>
+<span class="fc" id="L45">				rv = JUNIOR;</span>
+<span class="fc bfc" id="L46" title="All 4 branches covered.">		else if (credits &gt;= 30 &amp;&amp; !graduated )</span>
+<span class="fc" id="L47">				rv = SOPHOMORE;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		else if ( credits &gt;= 0)</span>
+<span class="pc bpc" id="L49" title="1 of 4 branches missed.">            if (!graduated &amp;&amp; credits != 16)//  creates branch uncovered </span>
+<span class="fc" id="L50">				rv = FRESHMAN;</span>
+            else
+<span class="fc" id="L52">                rv = ERROR;</span>
+		else 
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">			if (credits &lt;= 0 ) // should be &lt; so expect an error on BV</span>
+<span class="fc" id="L55">				rv = ERROR;</span>
+
+<span class="fc bfc" id="L57" title="All 4 branches covered.">        if (credits &lt;124 &amp;&amp; graduated)// can't be graduated with less than 124 credits</span>
+<span class="fc" id="L58">            rv = ERROR;</span>
+
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">		if (credits == 77)</span>
+<span class="nc" id="L61">			rv = GRADUATE; // lucky sevens</span>
+
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if (credits == 13)</span>
+<span class="nc" id="L64">			rv = ERROR; // unlucky  13</span>
+<span class="fc" id="L65">		return rv;</span>
+	}
+
+}
+
+// Copyright 2021, Stephen Brown
+// MIT License - see license.txt
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
